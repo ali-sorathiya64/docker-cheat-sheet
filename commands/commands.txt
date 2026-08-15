@@ -1,0 +1,826 @@
+========================================
+          DOCKER COMMAND CHEAT SHEET
+========================================
+
+
+# ======================================
+# 1. BASIC DOCKER COMMANDS
+# ======================================
+
+# Check Docker version
+docker --version
+
+# Docker information
+docker info
+
+# See all Docker images
+docker images
+
+# Pull an image
+docker pull hello-world
+
+# Run an image / create and start a container
+docker run hello-world
+
+# Run Ubuntu in interactive terminal mode
+docker run -it ubuntu
+
+# Run Ubuntu with bash
+docker run -it ubuntu /bin/bash
+
+
+# ======================================
+# 2. CONTAINERS
+# ======================================
+
+# Show currently running containers
+docker ps
+
+# Show all containers (running + stopped)
+docker ps -a
+
+# Start an existing container
+docker start <container_id_or_name>
+
+# Stop a running container
+docker stop <container_id_or_name>
+
+# Restart a container
+docker restart <container_id_or_name>
+
+# Remove a container
+docker rm <container_id_or_name>
+
+# Force remove a running container
+docker rm -f <container_id_or_name>
+
+
+# ======================================
+# 3. IMAGES
+# ======================================
+
+# List images
+docker images
+
+# Pull an image
+docker pull <image_name>
+
+# Remove an image
+docker rmi <image_id_or_name>
+
+# Force remove an image
+docker rmi -f <image_id_or_name>
+
+# Build an image from Dockerfile
+docker build -t <image_name> .
+
+
+# ======================================
+# 4. CONTAINER LOGS / DEBUGGING
+# ======================================
+
+# View container logs
+docker logs <container_id_or_name>
+
+# Follow logs in real time
+docker logs -f <container_id_or_name>
+
+# Execute bash inside container
+docker exec -it <container_id_or_name> /bin/bash
+
+# If bash is not available
+docker exec -it <container_id_or_name> /bin/sh
+
+# Example
+docker exec -it b5862c7091fc3033dbfc5833f1495299de80ea234b6158638acd3c33216d1c86 /bin/bash
+
+# Inspect container configuration
+docker inspect <container_id_or_name>
+
+# Show container processes
+docker top <container_id_or_name>
+
+# Show resource usage
+docker stats
+
+# Show port mappings
+docker port <container_id_or_name>
+
+
+# ======================================
+# 5. DETACHED MODE
+# ======================================
+
+# -d = detached mode
+docker run -d <image_name>
+
+# Example
+docker run -d nginx
+
+
+# ======================================
+# 6. CUSTOM CONTAINER NAME
+# ======================================
+
+# --name = custom container name
+
+docker run -d --name my-container nginx
+
+# Example
+docker run -d \
+  --name mysql \
+  mysql:8.0
+
+
+# ======================================
+# 7. ENVIRONMENT VARIABLES
+# ======================================
+
+# -e = environment variable
+
+docker run -d \
+  -e MYSQL_ROOT_PASSWORD=secret \
+  mysql:8.0
+
+# Multiple environment variables
+
+docker run -d \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=mydb \
+  postgres:16
+
+
+# ======================================
+# 8. PORT MAPPING / PORT BINDING
+# ======================================
+
+# Format:
+# -p HOST_PORT:CONTAINER_PORT
+
+# Example:
+docker run -p 8080:80 nginx
+
+# Left side  = Host machine port
+# Right side = Container port
+
+# MySQL
+docker run -d \
+  --name mysql \
+  -e MYSQL_ROOT_PASSWORD=secret \
+  -p 3306:3306 \
+  mysql:8.0
+
+# PostgreSQL
+docker run -d \
+  --name postgres \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  postgres:16
+
+# MongoDB
+docker run -d \
+  --name mongo \
+  -p 27017:27017 \
+  mongo:8
+
+# Redis
+docker run -d \
+  --name redis \
+  -p 6379:6379 \
+  redis:latest
+
+
+# ======================================
+# 9. MYSQL
+# ======================================
+
+# Run MySQL
+
+docker run -d \
+  --name mysql \
+  -e MYSQL_ROOT_PASSWORD=secret \
+  -p 3306:3306 \
+  mysql:8.0
+
+# Check MySQL
+docker ps
+
+# MySQL logs
+docker logs mysql
+
+# Access MySQL shell
+docker exec -it mysql mysql -u root -p
+
+
+# ======================================
+# 10. POSTGRESQL
+# ======================================
+
+# Run PostgreSQL
+
+docker run -d \
+  --name postgres \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  postgres:16
+
+# Check
+docker ps
+
+# Logs
+docker logs postgres
+
+# Access PostgreSQL shell
+docker exec -it postgres psql -U admin -d mydb
+
+# Connect to default database
+docker exec -it postgres psql -U admin
+
+
+# ======================================
+# 11. POSTGRESQL WITH VOLUME
+# ======================================
+
+# Create volume
+docker volume create postgres-data
+
+# Run PostgreSQL with persistent data
+
+docker run -d \
+  --name postgres \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  -v postgres-data:/var/lib/postgresql/data \
+  postgres:16
+
+
+# ======================================
+# 12. MONGODB
+# ======================================
+
+# Create network first
+docker network create mongo-network
+
+# Run MongoDB
+
+docker run -d \
+  --name mongo \
+  --network mongo-network \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=secret \
+  mongo:8
+
+# Check logs
+docker logs mongo
+
+# Access MongoDB shell
+docker exec -it mongo mongosh \
+  -u admin \
+  -p secret
+
+
+# ======================================
+# 13. MONGO EXPRESS
+# ======================================
+
+docker run -d \
+  --name mongo-express \
+  --network mongo-network \
+  -p 8081:8081 \
+  -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin \
+  -e ME_CONFIG_MONGODB_ADMINPASSWORD=secret \
+  -e ME_CONFIG_MONGODB_URL="mongodb://admin:secret@mongo:27017/" \
+  mongo-express
+
+# Mongo Express:
+# http://localhost:8081
+
+
+# ======================================
+# 14. REDIS
+# ======================================
+
+# Basic Redis
+
+docker run -d \
+  --name redis \
+  -p 6379:6379 \
+  redis:latest
+
+# Redis logs
+docker logs redis
+
+# Access Redis CLI
+docker exec -it redis redis-cli
+
+# Test Redis
+
+SET name Ali
+GET name
+
+
+# ======================================
+# 15. REDIS STACK
+# ======================================
+
+docker run -d \
+  --name redis-stack \
+  -p 6379:6379 \
+  -p 8001:8001 \
+  redis/redis-stack:latest
+
+# Redis Stack UI
+# http://localhost:8001
+
+
+# ======================================
+# 16. DOCKER NETWORK
+# ======================================
+
+# List networks
+docker network ls
+
+# Create network
+docker network create my-network
+
+# Inspect network
+docker network inspect my-network
+
+# Connect existing container to network
+docker network connect my-network <container>
+
+# Disconnect container
+docker network disconnect my-network <container>
+
+# Remove network
+docker network rm my-network
+
+
+# ======================================
+# 17. DOCKER VOLUMES
+# ======================================
+
+# List volumes
+docker volume ls
+
+# Create volume
+docker volume create my-volume
+
+# Inspect volume
+docker volume inspect my-volume
+
+# Remove volume
+docker volume rm my-volume
+
+# Example:
+docker run -d \
+  --name postgres \
+  -v postgres-data:/var/lib/postgresql/data \
+  postgres:16
+
+# -v HOST_VOLUME:CONTAINER_PATH
+
+
+# ======================================
+# 18. DOCKERFILE
+# ======================================
+
+# Build image from Dockerfile
+
+docker build -t mern-backend .
+
+# Run image
+
+docker run -p 5000:5000 \
+  --name backend \
+  mern-backend
+
+# Run with .env file
+
+docker run -p 5000:5000 \
+  --name backend \
+  --env-file .env \
+  mern-backend
+
+# Run in detached mode
+
+docker run -d \
+  -p 5000:5000 \
+  --name backend \
+  --env-file .env \
+  mern-backend
+
+# Rebuild after Dockerfile changes
+
+docker build -t mern-backend .
+
+# Run backend
+
+docker run -d \
+  -p 5000:5000 \
+  --name backend \
+  --env-file .env \
+  mern-backend
+
+
+# ======================================
+# 19. DOCKER COMPOSE
+# ======================================
+
+# Start all services
+docker compose up -d
+
+# Start using specific compose file
+docker compose -f mongodb-compose.yml up -d
+
+# Stop and remove services
+docker compose down
+
+# Stop specific compose file
+docker compose -f mongodb-compose.yml down
+
+# Check services
+docker compose ps
+
+# View logs
+docker compose logs
+
+# Follow logs
+docker compose logs -f
+
+# Logs for specific service
+docker compose logs backend
+
+# Follow specific service logs
+docker compose logs -f backend
+
+# Build and start
+docker compose up -d --build
+
+# Rebuild a specific service
+docker compose build backend
+
+# Restart services
+docker compose restart
+
+
+# ======================================
+# 20. DOCKER COMPOSE COMMON WORKFLOW
+# ======================================
+
+# Start project
+docker compose up -d
+
+# Check containers
+docker compose ps
+
+# Check logs
+docker compose logs -f
+
+# Make changes to Dockerfile
+# Then rebuild
+
+docker compose up -d --build
+
+# Stop everything
+docker compose down
+
+
+# ======================================
+# 21. EXAMPLE DOCKER COMPOSE STACK
+# ======================================
+
+# Example:
+# Backend + PostgreSQL + Redis
+
+# docker-compose.yml
+
+services:
+
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: postgresql://admin:secret@postgres:5432/mydb
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres-data:
+
+
+# Start
+docker compose up -d
+
+# Stop
+docker compose down
+
+# Rebuild
+docker compose up -d --build
+
+
+# ======================================
+# 22. CONTAINER-TO-CONTAINER CONNECTION
+# ======================================
+
+# Containers on the same Docker network
+# can communicate using container/service name.
+
+# Example:
+
+DATABASE_URL=postgresql://admin:secret@postgres:5432/mydb
+
+# NOT:
+DATABASE_URL=postgresql://admin:secret@localhost:5432/mydb
+
+# In Docker Compose:
+# postgres = service/container hostname
+
+
+# ======================================
+# 23. ENV FILE
+# ======================================
+
+# Run container using .env
+
+docker run \
+  --env-file .env \
+  <image_name>
+
+# Example
+
+docker run -d \
+  --name backend \
+  --env-file .env \
+  -p 5000:5000 \
+  backend-image
+
+
+# ======================================
+# 24. CLEANUP
+# ======================================
+
+# Remove stopped containers
+docker container prune
+
+# Remove unused images
+docker image prune
+
+# Remove unused volumes
+docker volume prune
+
+# Remove unused networks
+docker network prune
+
+# Remove unused Docker resources
+docker system prune
+
+# Be careful with prune commands!
+
+
+# ======================================
+# 25. USEFUL CONTAINER COMMANDS
+# ======================================
+
+# Rename container
+docker rename <old_name> <new_name>
+
+# Copy file FROM container
+docker cp <container>:<path> <local_path>
+
+# Copy file TO container
+docker cp <local_path> <container>:<path>
+
+# Pause container
+docker pause <container>
+
+# Unpause container
+docker unpause <container>
+
+
+# ======================================
+# 26. IMPORTANT DOCKER FLAGS
+# ======================================
+
+-d
+# Detached mode
+
+-it
+# Interactive terminal
+
+-p
+# Port mapping
+
+-e
+# Environment variable
+
+--env-file
+# Load environment variables from .env
+
+--name
+# Custom container name
+
+-v
+# Volume mount
+
+--network
+# Connect container to network
+
+-t
+# Tag image
+
+-f
+# Specify Dockerfile / compose file depending on command
+
+
+# ======================================
+# 27. MOST IMPORTANT INTERVIEW COMMANDS
+# ======================================
+
+docker pull <image>
+
+docker images
+
+docker build -t <image> .
+
+docker run <image>
+
+docker run -d <image>
+
+docker run -d --name <name> <image>
+
+docker run -p 5000:5000 <image>
+
+docker run -e KEY=value <image>
+
+docker run --env-file .env <image>
+
+docker ps
+
+docker ps -a
+
+docker start <container>
+
+docker stop <container>
+
+docker restart <container>
+
+docker rm <container>
+
+docker rmi <image>
+
+docker logs <container>
+
+docker logs -f <container>
+
+docker exec -it <container> /bin/bash
+
+docker inspect <container>
+
+docker network ls
+
+docker network create <network>
+
+docker volume ls
+
+docker volume create <volume>
+
+docker compose up -d
+
+docker compose down
+
+docker compose ps
+
+docker compose logs -f
+
+docker compose up -d --build
+
+
+# ======================================
+# 28. DATABASE PORTS
+# ======================================
+
+MySQL       -> 3306
+PostgreSQL  -> 5432
+MongoDB     -> 27017
+Redis       -> 6379
+Mongo Express -> 8081
+
+
+# ======================================
+# 29. QUICK DATABASE COMMANDS
+# ======================================
+
+# PostgreSQL
+
+docker run -d \
+  --name postgres \
+  -e POSTGRES_USER=admin \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=mydb \
+  -p 5432:5432 \
+  postgres:16
+
+docker exec -it postgres psql -U admin -d mydb
+
+
+# MongoDB
+
+docker run -d \
+  --name mongo \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=secret \
+  mongo:8
+
+docker exec -it mongo mongosh -u admin -p secret
+
+
+# Redis
+
+docker run -d \
+  --name redis \
+  -p 6379:6379 \
+  redis:latest
+
+docker exec -it redis redis-cli
+
+
+# MySQL
+
+docker run -d \
+  --name mysql \
+  -e MYSQL_ROOT_PASSWORD=secret \
+  -p 3306:3306 \
+  mysql:8.0
+
+docker exec -it mysql mysql -u root -p
+
+
+# ======================================
+# 30. BASIC DOCKER CONCEPTS TO KNOW
+# ======================================
+
+Image
+= Blueprint/template used to create containers.
+
+Container
+= Running instance of an image.
+
+Dockerfile
+= Instructions used to build a Docker image.
+
+Docker Compose
+= Tool to define and run multiple containers/services.
+
+Port Mapping
+= Connect host port to container port.
+
+Example:
+-p 5000:5000
+
+Volume
+= Persistent storage for container data.
+
+Network
+= Allows containers to communicate with each other.
+
+Environment Variable
+= Configuration values passed to containers.
+
+Registry
+= Repository where Docker images are stored.
+Example: Docker Hub
+
+
+# ======================================
+# END
+# ======================================
