@@ -9,7 +9,6 @@ services:
       MONGO_INNITDB_ROOT_USERNAME:admin
       MONGO_INITDB_ROOT_PASSWORD:querty
 
-
   mongo-express:
     image:mongo-express
     ports:
