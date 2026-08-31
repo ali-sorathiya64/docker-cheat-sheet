@@ -1,0 +1,18 @@
+
+
+<--  steps to deploy backend application on aws(example node.js,nest.js) using CI/CD stuff
+
+
+step 1: create an instance and in quick start select os as ubuntu and important if you want run instance on your terminal / machine create key pair for login and right ssh traffic get the ssh command from ssh client and allocate the elastic ip address is must it is in [network and security] and we have to assign this ip address to our local machine choose an instance like it would be example level-5-running and press the associate and this ip is assign our instance  
+step 2: run the ssh command in your terminal where your key value ex level-5.pem and permit yes
+step 3: clone the github repo
+step 4: install docker for os like ubuntu 
+step 5: build the image and run the container
+step 6: if we want to check the container is working or not but like port is ex 5000 working on ec2 instance 
+        so we have to run it on our machine using ip || elastic ip (ex(3.6.5.158):5000) and also do one thing in network and security
+        in --> security groups launch wizard (security group) --> edit inbound rules --> add rule --> port range : ex :5000 cidr blocks : 0.0.0.0/0 -->save then check port is running or not --> and after checking stop the instance it is in a <-- instance state neither credits reduces
+step 7: The main problem arises now if we changes in code first of all we have to push on github and 
+        pull in the ec2 instance and stop the conatiner and build the image & re run the container this process create the main problem of redundancy in the process
+        the solution cames ci/cd pipeline 
+step 8: create .github directory and in it also create workflows --> and inside create deploy.yml file
+        create script of all name and on and jobs and steps etc and and push it on github 
