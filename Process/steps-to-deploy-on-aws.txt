@@ -14,6 +14,7 @@ step 5: build the image and run the container
 step 6: if we want to check the container is working or not but like port is ex 5000 working on ec2 instance 
         so we have to run it on our machine using ip || elastic ip (ex(3.6.5.158):5000) and also do one thing in network and security
         in --> security groups launch wizard (security group) --> edit inbound rules --> add rule --> port range : ex :5000 cidr blocks : 0.0.0.0/0 -->save then check port is running or not --> and after checking stop the instance it is in a <-- instance state neither credits reduces
+
 step 7: The main problem arises now if we changes in code first of all we have to push on github and 
         pull in the ec2 instance and stop the conatiner and build the image & re run the container this process create the main problem of redundancy in the process
         the solution cames ci/cd pipeline 
