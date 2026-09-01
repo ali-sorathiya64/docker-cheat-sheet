@@ -20,4 +20,4 @@ step 7: The main problem arises now if we changes in code first of all we have t
         the solution cames ci/cd pipeline 
 
 step 8: create .github directory and in it also create workflows --> and inside create deploy.yml file
-        create script of all name and on and jobs and steps etc and and push it on github 
+                                  create script of all name and on and jobs and steps etc and and push it on github 
