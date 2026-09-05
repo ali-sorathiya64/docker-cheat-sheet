@@ -6,7 +6,6 @@
 # 1. BASIC DOCKER COMMANDS
 # ======================================
 
-
 # Check Docker version
 docker --version
 
