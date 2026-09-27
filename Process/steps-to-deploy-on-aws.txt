@@ -2,7 +2,6 @@
 <--  steps to deploy backend application on aws(example node.js,nest.js) using CI/CD stuff
 
 
-
 step 1: create an instance and in quick start select os as ubuntu and important if you want run instance on your terminal / machine create key pair for login and right ssh traffic get the ssh command from ssh client and allocate the elastic ip address is must it is in [network and security] and we have to assign this ip address to our local machine choose an instance like it would be example level-5-running and press the associate and this ip is assign our instance  
 
 step 2: run the ssh command in your terminal where your key value ex level-5.pem and permit yes
