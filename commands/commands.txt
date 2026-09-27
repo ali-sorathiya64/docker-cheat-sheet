@@ -27,7 +27,6 @@ docker run -it ubuntu
 # Run Ubuntu with bash
 docker run -it ubuntu /bin/bash
 
-
 # ======================================
 # 2. CONTAINERS
 # ======================================
