@@ -19,5 +19,5 @@ step 6: if we want to check the container is working or not but like port is ex 
 step 7: The main problem arises now if we changes in code first of all we have to push on github and 
         pull in the ec2 instance and stop the conatiner and build the image & re run the container this process create the main problem of redundancy in the process the solution cames ci/cd pipeline 
 
-step 8: create .github directory and in it also create workflows -->           and inside create deploy.yml file
+step 8: create .github directory and in it also create workflows -->        and inside create deploy.yml file
                                   create script of all name and on and jobs and steps etc and and push it on github 
